@@ -1,5 +1,7 @@
 package com.motazalbiruni.prayertimes.connecting;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -25,5 +27,9 @@ public class PrayerClient {
 
     public Call<TimingsModel> getAddressDay(String d){
         return prayerInterface.getDateDay(d);
+    }
+
+    public Call<TimingsModel> getListDay(String d){
+        return prayerInterface.getListDate(d);
     }
 }

@@ -1,28 +1,38 @@
 package com.motazalbiruni.prayertimes.ui.home;
 
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.room.Database;
 
 import com.motazalbiruni.prayertimes.connecting.PrayerClient;
 import com.motazalbiruni.prayertimes.connecting.TimingsModel;
+import com.motazalbiruni.prayertimes.roomdatabase.PrayerRepository;
+import com.motazalbiruni.prayertimes.roomdatabase.TimingEntity;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeViewModel extends ViewModel {
+public class HomeViewModel extends AndroidViewModel {
 
     //fields
     private MutableLiveData<String> mText;
-
-    public HomeViewModel() {
+    private PrayerRepository repository;
+    public HomeViewModel(@NonNull Application application) {
+        super(application);
         mText = new MutableLiveData<>();
-        PrayerClient.getConnectingData().getAddressDay("cairo").enqueue(new Callback<TimingsModel>() {
+        repository = PrayerRepository.getRepository(application );
+
+        PrayerClient.getConnectingData().getListDay("cairo").enqueue(new Callback<TimingsModel>() {
             @Override
             public void onResponse(Call<TimingsModel> call, Response<TimingsModel> response) {
-                int code = response.body().getCode();
-                mText.setValue(code+"");
+                String status = response.body().getStatus();
+                mText.setValue(status+"");
             }
 
             @Override
@@ -35,5 +45,15 @@ public class HomeViewModel extends ViewModel {
 
     public LiveData<String> getText() {
         return mText;
+    }
+
+    //getNoteById
+    public LiveData<TimingEntity> getTimingById(int id){
+        return repository.getNoteById(id);
+    }
+
+    //insert
+    public void insert(TimingEntity timingEntity){
+        repository.insert(timingEntity);
     }
 }//end class

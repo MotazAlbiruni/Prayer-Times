@@ -1,22 +1,23 @@
 package com.motazalbiruni.prayertimes.connecting;
 
+import java.util.List;
+
 public class TimingsModel {
 
-    private Data data;
+    private List<Data> data;
     private int code;
     private String status;
 
-    public TimingsModel(Data data, int code, String status) {
+    public TimingsModel(List<Data> data, int code, String status) {
         this.data = data;
         this.code = code;
         this.status = status;
-
     }
 
-    public Data getData() {
+    public List<Data> getData() {
         return data;
     }
-    public void setData(Data data) {
+    public void setData(List<Data> data) {
         this.data = data;
     }
 
@@ -246,20 +247,20 @@ public class TimingsModel {
                 }
             }//end class weekday
             public class Month {
-                String number;
+                int number;
                 String ar;
 
 
-                public Month(String number, String ar) {
+                public Month(int number, String ar) {
                     this.number = number;
                     this.ar = ar;
                 }
 
-                public String getNumber() {
+                public int getNumber() {
                     return number;
                 }
 
-                public void setNumber(String number) {
+                public void setNumber(int number) {
                     this.number = number;
                 }
 

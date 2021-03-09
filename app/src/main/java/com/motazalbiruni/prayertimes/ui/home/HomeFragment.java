@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.motazalbiruni.prayertimes.R;
+import com.motazalbiruni.prayertimes.roomdatabase.TimingEntity;
 
 public class HomeFragment extends Fragment {
 
@@ -23,11 +24,26 @@ public class HomeFragment extends Fragment {
         homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
+
         final TextView textView = root.findViewById(R.id.text_currentPrayer);
+        final TextView textSunRise = root.findViewById(R.id.text_sunRiseTime);
+        final TextView textSunSet = root.findViewById(R.id.text_sunSetTime);
+
         homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
+            }
+        });
+        homeViewModel.getTimingById(15).observe(getViewLifecycleOwner(), new Observer<TimingEntity>() {
+            @Override
+            public void onChanged(TimingEntity timingEntity) {
+                if (timingEntity != null){
+                    String sunRise = timingEntity.getSunRise();
+                    String sunSet = timingEntity.getSunSet();
+                    textSunRise.setText(sunRise);
+                    textSunSet.setText(sunSet);
+                }
             }
         });
         return root;
