@@ -52,6 +52,11 @@ public class HomeViewModel extends AndroidViewModel {
         return repository.getNoteById(id);
     }
 
+    //getNoteByDate
+    public LiveData<TimingEntity> getTimingByDate(String date){
+        return repository.getNoteByDate(date);
+    }
+
     //insert
     public void insert(TimingEntity timingEntity){
         repository.insert(timingEntity);

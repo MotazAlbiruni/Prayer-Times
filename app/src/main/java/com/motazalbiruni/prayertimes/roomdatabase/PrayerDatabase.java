@@ -73,14 +73,14 @@ public abstract class PrayerDatabase extends RoomDatabase {
                     String sunrise = data.getTimings().getSunrise().replace("(EET)","");
                     String sunset = data.getTimings().getSunset().replace("(EET)","");
                     String imsak = data.getTimings().getImsak().replace("(EET)","");
-                    String readable = data.getDate().getReadable();//25-3-2000
+                    String readable = data.getDate().getGregorian().getDate();//25-3-2000
                     String day = data.getDate().getHijri().getDay();//6
-                    int number = data.getDate().getHijri().getMonth().getNumber();//8
+                    String number = data.getDate().getHijri().getMonth().getEn();//8
                     String year = data.getDate().getHijri().getYear();//1448
                     String arWeekDay = data.getDate().getHijri().getWeekday().getAr();
 
-                    TimingEntity entity = new TimingEntity(arWeekDay,day+number+year,readable,fajr,sunrise
-                    ,dhuhr,asr,sunset,maghrib,isha,imsak);
+                    TimingEntity entity = new TimingEntity(arWeekDay,day+" "+number+" "+year,readable,
+                            fajr,sunrise,dhuhr,asr,sunset,maghrib,isha,imsak);
 
                     inStance.getTimingDao().insert(entity);
                 }

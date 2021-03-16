@@ -163,10 +163,12 @@ public class TimingsModel {
 
     public class Date {
         String readable;
+        Gregorian gregorian;
         Hijri hijri;
 
-        public Date(String readable, Hijri hijri) {
+        public Date(String readable, Hijri hijri, Gregorian gregorian) {
             this.readable = readable;
+            this.gregorian = gregorian;
             this.hijri = hijri;
         }
 
@@ -178,6 +180,14 @@ public class TimingsModel {
             this.readable = readable;
         }
 
+        public Gregorian getGregorian() {
+            return gregorian;
+        }
+
+        public void setGregorian(Gregorian gregorian) {
+            this.gregorian = gregorian;
+        }
+
         public Hijri getHijri() {
             return hijri;
         }
@@ -186,6 +196,47 @@ public class TimingsModel {
             this.hijri = hijri;
         }
 
+        public class Gregorian {
+            String date;
+            Month month;
+
+            public Gregorian(String date, Month month) {
+                this.date = date;
+                this.month = month;
+            }
+
+            public String getDate() {
+                return date;
+            }
+
+            public void setDate(String date) {
+                this.date = date;
+            }
+
+            public Month getMonth() {
+                return month;
+            }
+
+            public void setMonth(Month month) {
+                this.month = month;
+            }
+
+            public class Month {
+                int number;
+
+                public Month(int number) {
+                    this.number = number;
+                }
+
+                public int getNumber() {
+                    return number;
+                }
+
+                public void setNumber(int number) {
+                    this.number = number;
+                }
+            }
+        }
         public class Hijri {
             String day;
             String year;
@@ -233,9 +284,19 @@ public class TimingsModel {
 
             public class Weekday {
                 String ar;
+                String en;
 
-                public Weekday(String ar) {
+                public Weekday(String ar, String en) {
                     this.ar = ar;
+                    this.en = en;
+                }
+
+                public String getEn() {
+                    return en;
+                }
+
+                public void setEn(String en) {
+                    this.en = en;
                 }
 
                 public String getAr() {
@@ -249,11 +310,13 @@ public class TimingsModel {
             public class Month {
                 int number;
                 String ar;
+                String en;
 
 
-                public Month(int number, String ar) {
+                public Month(int number, String ar, String en) {
                     this.number = number;
                     this.ar = ar;
+                    this.en = en;
                 }
 
                 public int getNumber() {
@@ -272,6 +335,13 @@ public class TimingsModel {
                     this.ar = ar;
                 }
 
+                public String getEn() {
+                    return en;
+                }
+
+                public void setEn(String en) {
+                    this.en = en;
+                }
             }//end class Month
 
         }//end Class Hijri

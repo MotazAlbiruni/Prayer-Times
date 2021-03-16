@@ -18,6 +18,9 @@ public interface TimingDao {
     @Query("select * from timing_day where id= :id")
     LiveData<TimingEntity> getTimingById(int id);
 
+    @Query("select * from timing_day where dateReadable= :readable")
+    LiveData<TimingEntity> getTimingByDate(String readable);
+
     @Insert
     void insert(TimingEntity entity);
 

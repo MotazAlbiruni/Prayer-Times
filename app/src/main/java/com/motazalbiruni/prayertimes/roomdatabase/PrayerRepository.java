@@ -28,6 +28,11 @@ public class PrayerRepository {
         return timingDao.getTimingById(id);
     }
 
+    //getNoteByDate
+    public LiveData<TimingEntity> getNoteByDate(final String readable){
+        return timingDao.getTimingByDate(readable);
+    }
+
     //insert
     public void insert(final TimingEntity entity){
         MyExecutor.getInstance().diskIO().execute(new Runnable() {

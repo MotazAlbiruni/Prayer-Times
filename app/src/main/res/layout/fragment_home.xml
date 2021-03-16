@@ -170,21 +170,32 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:text="wednesday"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/text_todayDate"
+                android:id="@+id/text_todayHigri"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/text_today"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="4dp"
                 android:gravity="center"
-                android:text="11-rageb-1448 24-2-2021"
+                android:text="11-rageb-1448"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+            <TextView
+                android:id="@+id/text_todayDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_todayHigri"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="8dp"
+                android:gravity="center"
+                android:text="24-2-2021"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
