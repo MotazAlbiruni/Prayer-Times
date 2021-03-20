@@ -7,19 +7,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.motazalbiruni.prayertimes.R;
 
 import java.util.List;
 
 /*** Created by motaz albiruni on 16/03/2021 */
-public class MyRecyclerAdaptor extends RecyclerView.Adapter<MyRecyclerAdaptor.MyViewHolder> {
+public class AdaptorPrayerTimes extends RecyclerView.Adapter<AdaptorPrayerTimes.MyViewHolder> {
 
     private final Context context;
-    private List<PrayerTimes> items;
+    private List<PrayerTimes> listItems;
 
-    public MyRecyclerAdaptor(List<PrayerTimes> items, Context context) {
-        this.items = items;
+    public AdaptorPrayerTimes(Context context) {
         this.context = context;
     }
 
@@ -31,25 +31,32 @@ public class MyRecyclerAdaptor extends RecyclerView.Adapter<MyRecyclerAdaptor.My
         return new MyViewHolder(v);
     }
 
+    public void setList(List<PrayerTimes> list) {
+        this.listItems = list;
+        notifyDataSetChanged();
+    }//end setList()
+
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        PrayerTimes item = items.get(position);
-
-    }
+        PrayerTimes item = listItems.get(position);
+        holder.prayer_name.setText(item.item_name);
+        holder.prayer_time.setText(item.item_time);
+    }//end onBindViewHolder()
 
     @Override
     public int getItemCount() {
-        if (items == null) {
+        if (listItems == null) {
             return 0;
         }
-        return items.size();
+        return listItems.size();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-
+        private TextView prayer_name,prayer_time;
         MyViewHolder(View itemView) {
             super(itemView);
+            prayer_name = itemView.findViewById(R.id.prayer_name);
+            prayer_time = itemView.findViewById(R.id.prayer_time);
         }
-    }
-
-}
+    }//end class MyViewHolder
+}//end class

@@ -1,16 +1,22 @@
 package com.motazalbiruni.prayertimes.roomdatabase;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 @Entity(tableName = "timing_day")
 public class TimingEntity {
     //fields
     @PrimaryKey(autoGenerate = true)
     int id;
-    String day;
-    String dateHijri;
+    @ColumnInfo(name = "week_day")
+    WeekdayRoom weekDay;
+    @ColumnInfo(name = "date_hijri")
+    DateHijri dateHijri;
+    @ColumnInfo(name = "date_gregorian")
+    DateGregorian dateGregorian;
     String dateReadable;
     String fajr;
     String sunRise;
@@ -22,12 +28,13 @@ public class TimingEntity {
     String imsak;
 
     //constructor
-    public TimingEntity(int id, String day, String dateHijri, String dateReadable,
+    public TimingEntity(int id, WeekdayRoom weekDay, DateHijri dateHijri, DateGregorian dateGregorian,String dateReadable,
                         String fajr, String sunRise, String dhuhr, String asr,
                         String sunSet, String maghrib, String isha, String imsak) {
         this.id = id;
-        this.day = day;
+        this.weekDay = weekDay;
         this.dateHijri = dateHijri;
+        this.dateGregorian = dateGregorian;
         this.dateReadable = dateReadable;
         this.fajr = fajr;
         this.sunRise = sunRise;
@@ -40,11 +47,12 @@ public class TimingEntity {
     }//end constructor()
 
     @Ignore
-    public TimingEntity(String day, String dateHijri, String dateReadable,
+    public TimingEntity(WeekdayRoom weekDay, DateHijri dateHijri, DateGregorian dateGregorian,String dateReadable,
                         String fajr, String sunRise, String dhuhr, String asr,
                         String sunSet, String maghrib, String isha, String imsak) {
-        this.day = day;
+        this.weekDay = weekDay;
         this.dateHijri = dateHijri;
+        this.dateGregorian = dateGregorian;
         this.dateReadable = dateReadable;
         this.fajr = fajr;
         this.sunRise = sunRise;
@@ -64,12 +72,16 @@ public class TimingEntity {
         this.id = id;
     }
 
-    public String getDay() {
-        return day;
+    public WeekdayRoom getWeekDay() {
+        return weekDay;
     }
 
-    public String getDateHijri() {
+    public DateHijri getDateHijri() {
         return dateHijri;
+    }
+
+    public DateGregorian getDateGregorian() {
+        return dateGregorian;
     }
 
     public String getDateReadable() {

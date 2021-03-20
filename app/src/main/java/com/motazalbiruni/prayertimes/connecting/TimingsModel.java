@@ -198,11 +198,41 @@ public class TimingsModel {
 
         public class Gregorian {
             String date;
+            String day;
+            String year;
+            Weekday weekday;
             Month month;
 
-            public Gregorian(String date, Month month) {
+            public Gregorian(String date, String day, String year,Weekday weekday, Month month) {
                 this.date = date;
+                this.day = day;
+                this.year = year;
+                this.weekday = weekday;
                 this.month = month;
+            }
+
+            public String getDay() {
+                return day;
+            }
+
+            public void setDay(String day) {
+                this.day = day;
+            }
+
+            public String getYear() {
+                return year;
+            }
+
+            public void setYear(String year) {
+                this.year = year;
+            }
+
+            public Weekday getWeekday() {
+                return weekday;
+            }
+
+            public void setWeekday(Weekday weekday) {
+                this.weekday = weekday;
             }
 
             public String getDate() {
@@ -236,7 +266,21 @@ public class TimingsModel {
                     this.number = number;
                 }
             }
-        }
+
+            public class Weekday {
+                String en;
+                public Weekday(String en) {
+                    this.en = en;
+                }
+                public String getEn() {
+                    return en;
+                }
+                public void setEn(String en) {
+                    this.en = en;
+                }
+            }//end class Weekday
+        }//end class gregorian
+
         public class Hijri {
             String day;
             String year;
@@ -284,34 +328,21 @@ public class TimingsModel {
 
             public class Weekday {
                 String ar;
-                String en;
-
-                public Weekday(String ar, String en) {
+                public Weekday(String ar) {
                     this.ar = ar;
-                    this.en = en;
                 }
-
-                public String getEn() {
-                    return en;
-                }
-
-                public void setEn(String en) {
-                    this.en = en;
-                }
-
                 public String getAr() {
                     return ar;
                 }
-
                 public void setAr(String ar) {
                     this.ar = ar;
                 }
             }//end class weekday
+
             public class Month {
                 int number;
                 String ar;
                 String en;
-
 
                 public Month(int number, String ar, String en) {
                     this.number = number;

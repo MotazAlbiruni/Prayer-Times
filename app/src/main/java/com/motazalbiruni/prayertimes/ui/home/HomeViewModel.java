@@ -28,11 +28,12 @@ public class HomeViewModel extends AndroidViewModel {
         mText = new MutableLiveData<>();
         repository = PrayerRepository.getRepository(application );
 
-        PrayerClient.getConnectingData().getListDay("cairo").enqueue(new Callback<TimingsModel>() {
+        PrayerClient.getConnectingData().getListDay("cairo",5).enqueue(new Callback<TimingsModel>() {
             @Override
             public void onResponse(Call<TimingsModel> call, Response<TimingsModel> response) {
                 String status = response.body().getStatus();
-                mText.setValue(status+"");
+                String s = response.body().getData().get(18).getDate().getHijri().getMonth().getAr();
+                mText.setValue(s+"");
             }
 
             @Override

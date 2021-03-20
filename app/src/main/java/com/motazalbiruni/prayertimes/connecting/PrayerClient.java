@@ -29,7 +29,7 @@ public class PrayerClient {
         return prayerInterface.getDateDay(d);
     }
 
-    public Call<TimingsModel> getListDay(String d){
-        return prayerInterface.getListDate(d);
+    public Call<TimingsModel> getListDay(String location, int method){
+        return prayerInterface.getListDate(location, method);
     }
 }

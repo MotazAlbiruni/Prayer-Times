@@ -3,7 +3,6 @@ package com.motazalbiruni.prayertimes.ui.home;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.format.DateFormat;
-import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,24 +14,31 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.motazalbiruni.prayertimes.R;
+import com.motazalbiruni.prayertimes.roomdatabase.DataConverter;
 import com.motazalbiruni.prayertimes.roomdatabase.TimingEntity;
+import com.motazalbiruni.prayertimes.ui.AdaptorPrayerTimes;
+import com.motazalbiruni.prayertimes.ui.PrayerTimes;
 
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
-import java.util.Timer;
 
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
-    private TextView textTodayDate, textSunRise ,textSunSet,
-            currentPrayer, textTodayHigri,textToday, textTimeLeft;
+    private TextView textTodayDate, textSunRise, textSunSet,
+            currentPrayer, textTodayHigri, textToday, textTimeLeft;
+    private RecyclerView recyclerViewPrayer;
+
+    private List<PrayerTimes> prayerTimesList;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -48,6 +54,8 @@ public class HomeFragment extends Fragment {
         textToday = root.findViewById(R.id.text_today);
         textTimeLeft = root.findViewById(R.id.text_timeLeft);
 
+        recyclerViewPrayer = root.findViewById(R.id.recycler_times);
+
         homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -62,29 +70,65 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        recyclerViewPrayer.setLayoutManager(linearLayoutManager);
+        AdaptorPrayerTimes recyclerAdaptor = new AdaptorPrayerTimes(getContext());
+
+        prayerTimesList = new ArrayList<>();
+
         Date date = new Date();
-        String timeToday = (String) DateFormat.format("dd-MM-yyyy", date.getTime());
+        String dateToday = (String) DateFormat.format("dd-MM-yyyy", date.getTime());
+        String timeNow = (String) DateFormat.format("HH:mm", date.getTime());
 
-        try {
-            String s = convertTime("15:15");
-            String next = findNext(s, "4:21 AM", "12:1 PM", "3:32 PM", "6:30 PM", "8:4 PM");
-            textTimeLeft.setText(next);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        homeViewModel.getTimingByDate(timeToday).observe(getViewLifecycleOwner(), new Observer<TimingEntity>() {
+        homeViewModel.getTimingByDate(dateToday).observe(getViewLifecycleOwner(), new Observer<TimingEntity>() {
             @Override
             public void onChanged(TimingEntity timingEntity) {
-                if (timingEntity != null){
-                    String sunRise = convertTime(timingEntity.getSunRise());
-                    String sunSet = convertTime(timingEntity.getSunSet()) ;
+                if (timingEntity != null) {
+                    String sunRise = convertTime(timingEntity.getSunRise());//time of sunRise
+                    String sunSet = convertTime(timingEntity.getSunSet());//time of sunSet
+
+                    final String fajr = convertTime(timingEntity.getFajr()); //time of fajr
+                    String dhuhr = convertTime(timingEntity.getDhuhr());//time of dhuhr
+                    String asr = convertTime(timingEntity.getAsr());//time of asr
+                    String maghrib = convertTime(timingEntity.getMaghrib()); //time of maghrib
+                    String isha = convertTime(timingEntity.getIsha()); //time of isha
+                    //week day
+                    String today = timingEntity.getWeekDay().getArWeekDay();
+                    //hijri date
+                    String todayHijri = String.format("%s %s %s"
+                            , timingEntity.getDateHijri().getDay()
+                            , timingEntity.getDateHijri().getMonth_ar()
+                            , timingEntity.getDateHijri().getYear());
+                    //gregorian date
+                    String todayGregorian = String.format("%s %s %s"
+                            , timingEntity.getDateGregorian().getDay()
+                            , timingEntity.getDateGregorian().getMonth_ar()
+                            , timingEntity.getDateGregorian().getYear());
+
+                    try {
+                        String s = convertTime(timeNow);
+                        String next = findNext(s, fajr, dhuhr, asr, maghrib, isha);
+                        textTimeLeft.setText(next);
+
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
                     textSunRise.setText(sunRise);
                     textSunSet.setText(sunSet);
-                    textToday.setText(timingEntity.getDay());
-                    textTodayDate.setText(timingEntity.getDateReadable());
-                    textTodayHigri.setText(timingEntity.getDateHijri());
-                    textTodayDate.setText(timingEntity.getDateReadable());
+                    textToday.setText(today);
+                    textTodayDate.setText(todayGregorian);
+                    textTodayHigri.setText(todayHijri);
+
+                    prayerTimesList.add(new PrayerTimes("Fajr", fajr));
+                    prayerTimesList.add(new PrayerTimes("Dhuhr", dhuhr));
+                    prayerTimesList.add(new PrayerTimes("Asr", asr));
+                    prayerTimesList.add(new PrayerTimes("maghrib", maghrib));
+                    prayerTimesList.add(new PrayerTimes("Isha", isha));
+
+                    recyclerAdaptor.setList(prayerTimesList);
+                    recyclerViewPrayer.setAdapter(recyclerAdaptor);
 
                 }
             }
@@ -113,12 +157,12 @@ public class HomeFragment extends Fragment {
         return (bestTime != null ? bestTime : minTime);
     }//end find Next()
 
-    public String convertTime(String time){
+    public String convertTime(String time) {
         String timeConvert = "";
         try {
             final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
             final Date dateObj = sdf.parse(time);
-           timeConvert =  new SimpleDateFormat("hh:mm a").format(dateObj);
+            timeConvert = new SimpleDateFormat("hh:mm a").format(dateObj);
         } catch (final ParseException e) {
             e.printStackTrace();
         }

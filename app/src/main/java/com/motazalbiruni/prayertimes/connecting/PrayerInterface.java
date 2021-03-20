@@ -9,5 +9,5 @@ public interface PrayerInterface {
     Call<TimingsModel> getDateDay(@Query("address") String address);
 
     @GET("calendarByAddress")
-    Call<TimingsModel> getListDate(@Query("address")String address);
+    Call<TimingsModel> getListDate(@Query("address")String address ,@Query("method") int method);
 }

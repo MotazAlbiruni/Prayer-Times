@@ -10,6 +10,8 @@
 
     <!--my color-->
     <color name="blue_light">#6fd6ff</color>
+    <color name="green_light">#84c6bc</color>
+    <color name="gray_light">#F6EEEE</color>
 
 
 </resources>
