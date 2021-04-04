@@ -42,4 +42,15 @@ public class PrayerRepository {
             }
         });
     }
+
+    //update
+    public void update(final TimingEntity entity){
+        MyExecutor.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                timingDao.update(entity);
+            }
+        });
+    }
+
 }//end class

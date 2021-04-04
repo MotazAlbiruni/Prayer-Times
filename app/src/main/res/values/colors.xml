@@ -12,6 +12,10 @@
     <color name="blue_light">#6fd6ff</color>
     <color name="green_light">#84c6bc</color>
     <color name="gray_light">#F6EEEE</color>
-
+    <color name="green">#1B4915</color>
+    <color name="blue">#142551</color>
+    <color name="blue_location">#001787</color>
+    <color name="orange">#5A310E</color>
+    <color name="yellow">#5A510E</color>
 
 </resources>

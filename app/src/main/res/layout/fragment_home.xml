@@ -33,10 +33,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
-                    android:drawableLeft="@drawable/ic_home_black_24dp"
+                    android:drawableLeft="@drawable/ic_location"
                     android:padding="8dp"
                     android:text=" Cairo"
-                    android:textColor="@color/white"
+                    android:textColor="@color/blue_location"
                     android:textSize="18sp" />
 
                 <TextView
@@ -47,7 +47,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="80dp"
                     android:text="Upcoming Prayer"
-                    android:textColor="@color/white"
+                    android:textColor="@color/green"
                     android:textSize="20sp" />
 
                 <TextView
@@ -58,7 +58,8 @@
                     android:layout_centerHorizontal="true"
                     android:layout_margin="8dp"
                     android:text="Asr"
-                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textColor="@color/green"
                     android:textSize="20sp" />
 
                 <TextView
@@ -68,7 +69,8 @@
                     android:layout_below="@id/text_nextPrayer"
                     android:layout_centerHorizontal="true"
                     android:text="00:00"
-                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textColor="@color/green"
                     android:textSize="20sp" />
                 <TextView
                     android:id="@+id/text_sunSet"
@@ -78,7 +80,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="200dp"
                     android:text="Sun Set"
-                    android:textColor="@color/white"
+                    android:textColor="@color/orange"
                     android:textSize="20sp" />
                 <TextView
                     android:id="@+id/text_sunSetTime"
@@ -88,7 +90,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="4dp"
                     android:text="00:00"
-                    android:textColor="@color/white"
+                    android:textColor="@color/orange"
                     android:textSize="20sp" />
             </RelativeLayout>
 
@@ -121,7 +123,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="200dp"
                     android:text="Sun Rise"
-                    android:textColor="@color/white"
+                    android:textColor="@color/blue"
                     android:textSize="20sp" />
                 <TextView
                     android:id="@+id/text_sunRiseTime"
@@ -131,7 +133,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="4dp"
                     android:text="00:00"
-                    android:textColor="@color/white"
+                    android:textColor="@color/blue"
                     android:textSize="20sp" />
             </RelativeLayout>
         </LinearLayout>

@@ -1,6 +1,7 @@
 package com.motazalbiruni.prayertimes.roomdatabase;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,6 +32,7 @@ public abstract class PrayerDatabase extends RoomDatabase {
     private static Context mContext;
     private static PrayerDatabase inStance;
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(4);
+    private static SharedPreferences preferencesPrayerTimes;
 
     public static synchronized PrayerDatabase getDatabase(Context context) {
         mContext = context;
@@ -38,6 +40,7 @@ public abstract class PrayerDatabase extends RoomDatabase {
             inStance = Room.databaseBuilder(context.getApplicationContext(),
                     PrayerDatabase.class, DATABASE_NAME).allowMainThreadQueries()
                     .addCallback(mCallback).build();
+            preferencesPrayerTimes = mContext.getSharedPreferences("timePrayer",Context.MODE_PRIVATE);
         }
         return inStance;
     }//end getDatabase()
@@ -50,6 +53,9 @@ public abstract class PrayerDatabase extends RoomDatabase {
                 @Override
                 public void run() {
                     getData();
+                    SharedPreferences.Editor editor = preferencesPrayerTimes.edit();
+                    editor.putInt("update",1);
+                    editor.apply();
                 }
             });
         }//end onCreate()
@@ -57,7 +63,12 @@ public abstract class PrayerDatabase extends RoomDatabase {
         @Override
         public void onOpen(@NonNull SupportSQLiteDatabase db) {
             super.onOpen(db);
-
+            EXECUTOR_SERVICE.execute(new Runnable() {
+                @Override
+                public void run() {
+                    getData();
+                }
+            });
         }//end onOpen
     };
 
@@ -68,6 +79,8 @@ public abstract class PrayerDatabase extends RoomDatabase {
             @Override
             public void onResponse(Call<TimingsModel> call, Response<TimingsModel> response) {
                 List<TimingsModel.Data> dataList = response.body().getData();
+                SharedPreferences.Editor editor = preferencesPrayerTimes.edit();
+
                 for (TimingsModel.Data data: dataList){
                     //prayer times
                     String fajr = data.getTimings().getFajr().replace("(EET)","");
@@ -82,8 +95,8 @@ public abstract class PrayerDatabase extends RoomDatabase {
                     String readable = data.getDate().getGregorian().getDate();//25-3-2000
                     String day_number = data.getDate().getGregorian().getDay();//6
                     int month_number = data.getDate().getGregorian().getMonth().getNumber();//-08
-                    String monthEn = JointClass.getMonthEn(month_number);
-                    String monthAr = JointClass.getMonthAr(month_number);
+                    String monthEn = JointClass.getMonthEn(month_number);//to get name of month en
+                    String monthAr = JointClass.getMonthAr(month_number);//to get name of month ar
                     String year_gregorian = data.getDate().getGregorian().getYear();//2021
                     DateGregorian dateGregorian = new DateGregorian(day_number,month_number,monthAr,monthEn,year_gregorian);
                     //date hijri
@@ -102,9 +115,20 @@ public abstract class PrayerDatabase extends RoomDatabase {
                             ,dateHijri,dateGregorian,readable,
                             fajr,sunrise,dhuhr,asr,sunset,maghrib,isha,imsak);
 
-                    inStance.getTimingDao().insert(entity);
-                }
-            }
+                    int update = preferencesPrayerTimes.getInt("update", -1);
+                    if (update == -1){
+//                        inStance.getTimingDao().insert(entity);
+                    }else {
+//                        inStance.getTimingDao().update(entity);
+                        inStance.getTimingDao().insert(entity);
+                    }
+
+                    editor = preferencesPrayerTimes.edit();
+                    editor.putInt("currentMonth",month_number);
+                    editor.apply();
+
+                }//end for
+            }//end onResponse()
 
             @Override
             public void onFailure(Call<TimingsModel> call, Throwable t) {

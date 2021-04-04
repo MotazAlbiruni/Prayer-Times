@@ -1,6 +1,7 @@
 package com.motazalbiruni.prayertimes.ui.home;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -23,6 +24,7 @@ public class HomeViewModel extends AndroidViewModel {
     //fields
     private MutableLiveData<String> mText;
     private PrayerRepository repository;
+
     public HomeViewModel(@NonNull Application application) {
         super(application);
         mText = new MutableLiveData<>();

@@ -27,6 +27,10 @@ public class TimingEntity {
     String isha;
     String imsak;
 
+    @Ignore
+    public TimingEntity() {
+    }
+
     //constructor
     public TimingEntity(int id, WeekdayRoom weekDay, DateHijri dateHijri, DateGregorian dateGregorian,String dateReadable,
                         String fajr, String sunRise, String dhuhr, String asr,
