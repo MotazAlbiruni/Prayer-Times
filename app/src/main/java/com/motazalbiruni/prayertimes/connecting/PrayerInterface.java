@@ -10,4 +10,9 @@ public interface PrayerInterface {
 
     @GET("calendarByAddress")
     Call<TimingsModel> getListDate(@Query("address")String address ,@Query("method") int method);
-}
+
+    @GET("calendarByAddress")
+    Call<TimingsModel> getListDateByMonth(@Query("address")String address
+            ,@Query("method") int method ,@Query("month") int month);
+
+}//end interface

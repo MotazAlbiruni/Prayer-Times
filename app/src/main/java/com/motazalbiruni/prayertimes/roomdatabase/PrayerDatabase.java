@@ -40,7 +40,7 @@ public abstract class PrayerDatabase extends RoomDatabase {
             inStance = Room.databaseBuilder(context.getApplicationContext(),
                     PrayerDatabase.class, DATABASE_NAME).allowMainThreadQueries()
                     .addCallback(mCallback).build();
-            preferencesPrayerTimes = mContext.getSharedPreferences("timePrayer",Context.MODE_PRIVATE);
+            preferencesPrayerTimes = mContext.getSharedPreferences("timePrayer", Context.MODE_PRIVATE);
         }
         return inStance;
     }//end getDatabase()
@@ -52,10 +52,10 @@ public abstract class PrayerDatabase extends RoomDatabase {
             EXECUTOR_SERVICE.execute(new Runnable() {
                 @Override
                 public void run() {
-                    getData();
                     SharedPreferences.Editor editor = preferencesPrayerTimes.edit();
-                    editor.putInt("update",1);
+                    editor.putInt("update", 1);
                     editor.apply();
+                    getData();
                 }
             });
         }//end onCreate()
@@ -74,67 +74,132 @@ public abstract class PrayerDatabase extends RoomDatabase {
 
     public abstract TimingDao getTimingDao();
 
-    private static void getData(){
-        PrayerClient.getConnectingData().getListDay("cairo",5).enqueue(new retrofit2.Callback<TimingsModel>() {
-            @Override
-            public void onResponse(Call<TimingsModel> call, Response<TimingsModel> response) {
-                List<TimingsModel.Data> dataList = response.body().getData();
-                SharedPreferences.Editor editor = preferencesPrayerTimes.edit();
+    private static void getData() {
 
-                for (TimingsModel.Data data: dataList){
-                    //prayer times
-                    String fajr = data.getTimings().getFajr().replace("(EET)","");
-                    String dhuhr = data.getTimings().getDhuhr().replace("(EET)","");
-                    String asr = data.getTimings().getAsr().replace("(EET)","");
-                    String maghrib = data.getTimings().getMaghrib().replace("(EET)","");
-                    String isha = data.getTimings().getIsha().replace("(EET)","");
-                    String sunrise = data.getTimings().getSunrise().replace("(EET)","");
-                    String sunset = data.getTimings().getSunset().replace("(EET)","");
-                    String imsak = data.getTimings().getImsak().replace("(EET)","");
-                    //date gregorian
-                    String readable = data.getDate().getGregorian().getDate();//25-3-2000
-                    String day_number = data.getDate().getGregorian().getDay();//6
-                    int month_number = data.getDate().getGregorian().getMonth().getNumber();//-08
-                    String monthEn = JointClass.getMonthEn(month_number);//to get name of month en
-                    String monthAr = JointClass.getMonthAr(month_number);//to get name of month ar
-                    String year_gregorian = data.getDate().getGregorian().getYear();//2021
-                    DateGregorian dateGregorian = new DateGregorian(day_number,month_number,monthAr,monthEn,year_gregorian);
-                    //date hijri
-                    String day_hijri = data.getDate().getHijri().getDay();//6
-                    int month_hijri_number = data.getDate().getHijri().getMonth().getNumber();//8
-                    String month_hijri_en = JointClass.getMonthHigriEn(month_hijri_number);//Ragab
-                    String month_hijri_ar = data.getDate().getHijri().getMonth().getAr();//رجب
-                    String year_higri = data.getDate().getHijri().getYear();//1448
-                    DateHijri dateHijri = new DateHijri(day_hijri,month_hijri_number,month_hijri_ar,month_hijri_en,year_higri);
-                    //weekday
-                    String arWeekDay = data.getDate().getHijri().getWeekday().getAr();
-                    String enWeekDay = data.getDate().getGregorian().getWeekday().getEn();
-                    WeekdayRoom weekday = new WeekdayRoom(arWeekDay,enWeekDay);
+        PrayerClient.getConnectingData().getListDay("cairo", 5)
+                .enqueue(new retrofit2.Callback<TimingsModel>() {
+                    @Override
+                    public void onResponse(Call<TimingsModel> call, Response<TimingsModel> response) {
+                        List<TimingsModel.Data> dataList = response.body().getData();
+                        SharedPreferences.Editor editor = preferencesPrayerTimes.edit();
 
-                    TimingEntity entity = new TimingEntity(weekday
-                            ,dateHijri,dateGregorian,readable,
-                            fajr,sunrise,dhuhr,asr,sunset,maghrib,isha,imsak);
+                        for (TimingsModel.Data data : dataList) {
+                            //prayer times
+                            String fajr = data.getTimings().getFajr().replace("(EET)", "");
+                            String dhuhr = data.getTimings().getDhuhr().replace("(EET)", "");
+                            String asr = data.getTimings().getAsr().replace("(EET)", "");
+                            String maghrib = data.getTimings().getMaghrib().replace("(EET)", "");
+                            String isha = data.getTimings().getIsha().replace("(EET)", "");
+                            String sunrise = data.getTimings().getSunrise().replace("(EET)", "");
+                            String sunset = data.getTimings().getSunset().replace("(EET)", "");
+                            String imsak = data.getTimings().getImsak().replace("(EET)", "");
+                            //date gregorian
+                            String readable = data.getDate().getGregorian().getDate();//25-3-2000
+                            String day_number = data.getDate().getGregorian().getDay();//6
+                            int month_number = data.getDate().getGregorian().getMonth().getNumber();//-08
+                            String monthEn = JointClass.getMonthEn(month_number);//to get name of month en
+                            String monthAr = JointClass.getMonthAr(month_number);//to get name of month ar
+                            String year_gregorian = data.getDate().getGregorian().getYear();//2021
+                            DateGregorian dateGregorian = new DateGregorian(day_number, month_number, monthAr, monthEn, year_gregorian);
+                            //date hijri
+                            String day_hijri = data.getDate().getHijri().getDay();//6
+                            int month_hijri_number = data.getDate().getHijri().getMonth().getNumber();//8
+                            String month_hijri_en = JointClass.getMonthHigriEn(month_hijri_number);//Ragab
+                            String month_hijri_ar = data.getDate().getHijri().getMonth().getAr();//رجب
+                            String year_higri = data.getDate().getHijri().getYear();//1448
+                            DateHijri dateHijri = new DateHijri(day_hijri, month_hijri_number, month_hijri_ar, month_hijri_en, year_higri);
+                            //weekday
+                            String arWeekDay = data.getDate().getHijri().getWeekday().getAr();
+                            String enWeekDay = data.getDate().getGregorian().getWeekday().getEn();
+                            WeekdayRoom weekday = new WeekdayRoom(arWeekDay, enWeekDay);
 
-                    int update = preferencesPrayerTimes.getInt("update", -1);
-                    if (update == -1){
-//                        inStance.getTimingDao().insert(entity);
-                    }else {
-//                        inStance.getTimingDao().update(entity);
-                        inStance.getTimingDao().insert(entity);
+                            TimingEntity entity = new TimingEntity(weekday
+                                    , dateHijri, dateGregorian, readable,
+                                    fajr, sunrise, dhuhr, asr, sunset, maghrib, isha, imsak);
+
+                            inStance.getTimingDao().insert(entity);
+                            int update = preferencesPrayerTimes.getInt("update", -1);
+                            if (update != -1) {
+                                inStance.getTimingDao().update(entity);
+                            }
+
+                            editor.putInt("currentMonth", month_number);
+                            editor.apply();
+
+                        }//end for
+                    }//end onResponse()
+
+                    @Override
+                    public void onFailure(Call<TimingsModel> call, Throwable t) {
+                        SharedPreferences.Editor editor = preferencesPrayerTimes.edit();
+                        editor.putInt("update", -1);
+                        editor.apply();
                     }
+                });
 
-                    editor = preferencesPrayerTimes.edit();
-                    editor.putInt("currentMonth",month_number);
-                    editor.apply();
+        int month_counter = preferencesPrayerTimes.getInt("currentMonth", 1);
+        int update_counter = preferencesPrayerTimes.getInt("update", -1);
 
-                }//end for
-            }//end onResponse()
+        if (update_counter == 1) {
+            for (int i = 0; i<12 ; i++) {
+                month_counter++;
+                PrayerClient.getConnectingData().getListDayByMonth("cairo",5,month_counter)
+                        .enqueue(new retrofit2.Callback<TimingsModel>() {
+                            @Override
+                            public void onResponse(Call<TimingsModel> call, Response<TimingsModel> response) {
+                                List<TimingsModel.Data> dataList = response.body().getData();
+                                SharedPreferences.Editor editor = preferencesPrayerTimes.edit();
 
-            @Override
-            public void onFailure(Call<TimingsModel> call, Throwable t) {
+                                for (TimingsModel.Data data : dataList) {
+                                    //prayer times
+                                    String fajr = data.getTimings().getFajr().replace("(EET)", "");
+                                    String dhuhr = data.getTimings().getDhuhr().replace("(EET)", "");
+                                    String asr = data.getTimings().getAsr().replace("(EET)", "");
+                                    String maghrib = data.getTimings().getMaghrib().replace("(EET)", "");
+                                    String isha = data.getTimings().getIsha().replace("(EET)", "");
+                                    String sunrise = data.getTimings().getSunrise().replace("(EET)", "");
+                                    String sunset = data.getTimings().getSunset().replace("(EET)", "");
+                                    String imsak = data.getTimings().getImsak().replace("(EET)", "");
+                                    //date gregorian
+                                    String readable = data.getDate().getGregorian().getDate();//25-3-2000
+                                    String day_number = data.getDate().getGregorian().getDay();//6
+                                    int month_number = data.getDate().getGregorian().getMonth().getNumber();//-08
+                                    String monthEn = JointClass.getMonthEn(month_number);//to get name of month en
+                                    String monthAr = JointClass.getMonthAr(month_number);//to get name of month ar
+                                    String year_gregorian = data.getDate().getGregorian().getYear();//2021
+                                    DateGregorian dateGregorian = new DateGregorian(day_number, month_number, monthAr, monthEn, year_gregorian);
+                                    //date hijri
+                                    String day_hijri = data.getDate().getHijri().getDay();//6
+                                    int month_hijri_number = data.getDate().getHijri().getMonth().getNumber();//8
+                                    String month_hijri_en = JointClass.getMonthHigriEn(month_hijri_number);//Ragab
+                                    String month_hijri_ar = data.getDate().getHijri().getMonth().getAr();//رجب
+                                    String year_higri = data.getDate().getHijri().getYear();//1448
+                                    DateHijri dateHijri = new DateHijri(day_hijri, month_hijri_number, month_hijri_ar, month_hijri_en, year_higri);
+                                    //weekday
+                                    String arWeekDay = data.getDate().getHijri().getWeekday().getAr();
+                                    String enWeekDay = data.getDate().getGregorian().getWeekday().getEn();
+                                    WeekdayRoom weekday = new WeekdayRoom(arWeekDay, enWeekDay);
 
-            }
-        });
+                                    TimingEntity entity = new TimingEntity(weekday
+                                            , dateHijri, dateGregorian, readable,
+                                            fajr, sunrise, dhuhr, asr, sunset, maghrib, isha, imsak);
+
+                                    inStance.getTimingDao().insert(entity);
+                                    int update = preferencesPrayerTimes.getInt("update", -1);
+                                    if (update != -1) {
+                                        inStance.getTimingDao().update(entity);
+                                    }
+                                }
+                            }//end onResponse()
+                            @Override
+                            public void onFailure(Call<TimingsModel> call, Throwable t) {
+
+                            }//end onFailure()
+                        });
+            }//end for month
+        }
+
+
     }//end getData()
-    
+
 }//end class

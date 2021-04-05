@@ -93,7 +93,7 @@ public class HomeFragment extends Fragment {
         String dateToday = (String) DateFormat.format("dd-MM-yyyy", date.getTime());
         String timeNow = (String) DateFormat.format("HH:mm", date.getTime());
 
-        homeViewModel.getTimingByDate(dateToday).observe(getViewLifecycleOwner(), new Observer<TimingEntity>() {
+        homeViewModel.getTimingByDate("13-05-2021").observe(getViewLifecycleOwner(), new Observer<TimingEntity>() {
             @Override
             public void onChanged(TimingEntity timingEntity) {
                 if (timingEntity != null) {

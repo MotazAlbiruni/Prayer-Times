@@ -29,7 +29,14 @@ public class PrayerClient {
         return prayerInterface.getDateDay(d);
     }
 
+    //get days from current month
     public Call<TimingsModel> getListDay(String location, int method){
         return prayerInterface.getListDate(location, method);
     }
-}
+
+    //get days by month select
+    public Call<TimingsModel> getListDayByMonth(String location, int method, int month){
+        return prayerInterface.getListDateByMonth(location, method, month);
+    }
+
+}//end class
