@@ -36,4 +36,7 @@ public interface TimingDao {
     @Query("delete from timing_day where id= :id")
     void deleteById(int id);
 
+    @Query("select count(distinct id) from timing_day")
+    int isEmptyDatabase();
+
 }//end interface

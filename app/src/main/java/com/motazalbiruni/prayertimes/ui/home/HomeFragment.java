@@ -1,5 +1,6 @@
 package com.motazalbiruni.prayertimes.ui.home;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import com.motazalbiruni.prayertimes.R;
 import com.motazalbiruni.prayertimes.roomdatabase.DataConverter;
 import com.motazalbiruni.prayertimes.roomdatabase.TimingEntity;
 import com.motazalbiruni.prayertimes.ui.AdaptorPrayerTimes;
+import com.motazalbiruni.prayertimes.ui.MyIntentService;
 import com.motazalbiruni.prayertimes.ui.PrayerTimes;
 
 import java.sql.Time;
@@ -42,7 +44,7 @@ import java.util.TimeZone;
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
-    private TextView textTodayDate, textSunRise, textSunSet,
+    private TextView textTodayDate, textSunRise, textSunSet,txt_location,
             currentPrayer, textTodayHigri, textToday, textTimeLeft, textNextPrayer;
     private RecyclerView recyclerViewPrayer;
     private CountDownTimer downTimer;
@@ -50,6 +52,7 @@ public class HomeFragment extends Fragment {
     private boolean mTimerRunning;
     private List<PrayerTimes> prayerTimesList;
     private Handler handler = new Handler();
+    Intent intentServiceSound;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -65,8 +68,25 @@ public class HomeFragment extends Fragment {
         textToday = root.findViewById(R.id.text_today);
         textTimeLeft = root.findViewById(R.id.text_timeLeft);
         textNextPrayer = root.findViewById(R.id.text_nextPrayer);
-//        txt_countDown = root.findViewById(R.id.count_down);
+        txt_location = root.findViewById(R.id.text_location);
 
+        currentPrayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intentServiceSound = new Intent(getContext(), MyIntentService.class);
+                intentServiceSound.setAction(MyIntentService.ACTION_FOO);
+                intentServiceSound.putExtra(MyIntentService.EXTRA_PARAM1, "play");
+                getContext().startService(intentServiceSound);
+            }
+        });
+        txt_location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (intentServiceSound != null){
+                    getContext().stopService(intentServiceSound);
+                }
+            }
+        });
         recyclerViewPrayer = root.findViewById(R.id.recycler_times);
 
         homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -93,7 +113,7 @@ public class HomeFragment extends Fragment {
         String dateToday = (String) DateFormat.format("dd-MM-yyyy", date.getTime());
         String timeNow = (String) DateFormat.format("HH:mm", date.getTime());
 
-        homeViewModel.getTimingByDate("13-05-2021").observe(getViewLifecycleOwner(), new Observer<TimingEntity>() {
+        homeViewModel.getTimingByDate(dateToday).observe(getViewLifecycleOwner(), new Observer<TimingEntity>() {
             @Override
             public void onChanged(TimingEntity timingEntity) {
                 if (timingEntity != null) {
